@@ -6,10 +6,11 @@
 ## 1  What is Radial ART?
 
 ART is a Decision-Transformer that learns offline to map a full orbital states (rtn or roe), return-to-go (fuel budget), and constraint-to-go (keep-out-zone violation budget) to the next $`\delta v`$ thrust command for proximity-operations and docking. Standard ART uses dense GPT-2 attention. Thus, memory and compute scale quadratically with the N=4·K timestep token context. Applying Radial Attention replaces the dense pattern with a log-polar, block-sparse mask of:
+
         1. dense band of width $`w_0`$ around the diagonal 
         2. attention span halves every log-distance group 
         
-As a result, this requires only $`\mathcal{O}\(N \log N\)`$ tokens. This procedure should both speed-up inference and require less VRAM with little to no loss in control performance. To integrate the adjustment, LoRA is used to fine-tune and adapt the sparse model to the original dataset.
+As a result, this requires only $`\mathcal{O} (N \log N )`$ tokens. This procedure should both speed-up inference and require less VRAM with little to no loss in control performance. To integrate the adjustment, LoRA is used to fine-tune and adapt the sparse model to the original dataset.
 
 ---
 
@@ -34,7 +35,7 @@ As a result, this requires only $`\mathcal{O}\(N \log N\)`$ tokens. This procedu
 
 ## 4  Repository Contains:
 
-This repo contains the src folder with the radial_swap function to hot-swap the dense GPT-2 attention blocks and the modified training and evaluation scripts to fine-tune and evaluate the Radial ART model. The repo also contains the full Raial ART pipeline within a rough colab script.
+This repo contains the src folder with the radial_swap function to hot-swap the dense GPT-2 attention blocks and the modified training and evaluation scripts to fine-tune and evaluate the Radial ART model. The repo also contains the full Radial ART pipeline within a rough colab script.
 
 ---
 
