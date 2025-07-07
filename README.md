@@ -5,12 +5,11 @@
 
 ## 1  What is Radial ART?
 
-ART is a Decision-Transformer that learns offline to map a full orbital states (rtn or roe), return-to-go (fuel budget), and constraint-to-go (keep-out-zone violation budget) to the next $\delta$v thrust command for proximity-operations and docking. Standard ART uses dense GPT-2 attention. Thus, memory and compute scale quadratically with the N=4·K timestep token context. Applying Radial Attention replaces the dense pattern with a log-polar, block-sparse mask of:
-
-        - dense band of width $w_0$ around the diagonal 
-        - attention span halves every log-distance group 
+ART is a Decision-Transformer that learns offline to map a full orbital states (rtn or roe), return-to-go (fuel budget), and constraint-to-go (keep-out-zone violation budget) to the next $`\delta v`$ thrust command for proximity-operations and docking. Standard ART uses dense GPT-2 attention. Thus, memory and compute scale quadratically with the N=4·K timestep token context. Applying Radial Attention replaces the dense pattern with a log-polar, block-sparse mask of:
+        1. dense band of width $`w_0`$ around the diagonal 
+        2. attention span halves every log-distance group 
         
-As a result, this requires only O(N log N) tokens. This procedure should both speed-up inference and require less VRAM with little to no loss in control performance. To integrate the adjustment, LoRA is used to fine-tune and adapt the sparse model to the original dataset.
+As a result, this requires only $`\mathcal{O}\(N \log N\)`$ tokens. This procedure should both speed-up inference and require less VRAM with little to no loss in control performance. To integrate the adjustment, LoRA is used to fine-tune and adapt the sparse model to the original dataset.
 
 ---
 
@@ -51,16 +50,32 @@ From initial evaluation, results show some promise, though are not quite ideal.
 |   Radial ART   |  0.1714  |  1.1001  |
 |     ART+SCP    |  0.2010  |    -     |
 | Radial ART+SCP |  0.2102  |    -     |
-|----------------|:--------:|:--------:|
-| Expected from  | ~0.2010  |  ~0.4000 |
-| Radial ART+SCP |          |          |
+|Expected Results| ~0.2010  |  ~0.4000 |
 
 *Note: In the following figures ART and ART-SCP are the evaluated Radial ART and Radial ART-SCP models.
 
-<img src="radial_art_results/figures/pos_3d_split.png" width="400">
-<img src="radial_art_results/figures/roe_vs_time.png" width="400">
-<img src="radial_art_results/figures/delta_v.png" width="400">
-<img src="radial_art_results/figures/koz_constr_v2.png" width="400">
+<table>
+  <tr>
+    <td align="center">
+      <img src="radial_art_results/figures/pos_3d_split.png" width="400"><br>
+      <em>3-D Trajectory With+Without Radial ART+SCP</em>
+    </td>
+    <td align="center">
+      <img src="radial_art_results/figures/roe_vs_time.png" width="400"><br>
+      <em>ROE vs. Time</em>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="radial_art_results/figures/delta_v.png" width="400"><br>
+      <em>Delta v Profile</em>
+    </td>
+    <td align="center">
+      <img src="radial_art_results/figures/koz_constr_v2.png" width="400"><br>
+      <em>KOZ Constraint</em>
+    </td>
+  </tr>
+</table>
 
 **Positive Results:**
 - Memory is indeed reduced with sparse-radial attention masks cutting nearly 70% of attention-matrix memory (and associated large reduction in VRAM). 
