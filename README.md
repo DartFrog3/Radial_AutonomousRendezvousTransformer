@@ -1,4 +1,4 @@
-# Radial_AutonomousRendezvousTransformer
+# Radial Autonomous Rendezvous Transformer
 *Simple testing of the effectiveness of temporal radial attention within SLAB+ASL's Autonomous Rendevous Transformer (ART) and Sequential Convex Programming (SCP) pipeline.*
 
 ---
