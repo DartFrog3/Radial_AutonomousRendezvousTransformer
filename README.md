@@ -12,6 +12,8 @@ ART is a Decision-Transformer that learns offline to map orbital states (rtn or 
         
 As a result, this requires only $`\mathcal{O} (N \log N )`$ tokens. This procedure should both speed-up inference and require less VRAM with little to no loss in control performance. To integrate the adjustment, LoRA is used to fine-tune and adapt the sparse model to the original dataset.
 
+In a more physically intuitive sense, radial attention allows the transformer to learn by attributing less attention to far off dynamics (far-future or far-past) while maintaining full focus on the near-time dynamics. Given the local nature of classical dynamics, this approach seems somewhat natural.
+
 ---
 
 ## 2  Implementation Details
