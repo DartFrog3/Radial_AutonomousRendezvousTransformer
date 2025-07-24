@@ -28,10 +28,10 @@ In a more physically intuitive sense, radial attention allows the transformer to
 
 ## 3  Persisting Issues/TODO:
 
-1. Migrate from colab script
-2. Investigate switch back to fp32 (flash-attn related, issue 3 likely is related to flash-attn too)
-3. Fix/understand slow inference 
-4. Update A100 runtimes for standard ART, ART+SCP
+1. Update repo
+2. Implement planned features
+3. Migrate from colab script
+4. Investigate switch back to fp32 (flash-attn limited)
 
 ---
 
