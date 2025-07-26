@@ -61,6 +61,7 @@ def get_DT_model(model_name: str,
     radial_swap(base_model)
 
     model = PeftModel.from_pretrained(base_model, lora_dir, is_trainable=False)
+    model = model.merge_and_unload()
 
     # need fp16 as flash attn doesnt support fp32
     return model.half().to(device).eval()
