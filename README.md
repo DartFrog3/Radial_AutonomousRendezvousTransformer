@@ -28,10 +28,9 @@ In a more physically intuitive sense, radial attention allows the transformer to
 
 ## 3  Persisting Issues/TODO:
 
-1. Update repo
-2. Implement planned features
-3. Migrate from colab script
-4. Investigate switch back to fp32 (flash-attn limited)
+1. Implement planned features
+2. Migrate from colab script
+3. Investigate switch back to fp32 (flash-attn limited)
 
 ---
 
@@ -43,17 +42,16 @@ This repo contains the src folder with the radial_swap function to hot-swap the 
 
 ## 5  Testing Results:
 
-From initial evaluation, results show some promise, though are not quite ideal.
+Cost and runtime results are shown below.
 
 | Model          |   Cost   |  Runtime |
 |----------------|:--------:|:--------:|
 |       CVX      |  0.2010  |  0.2083  |
 |     CVX+SCP    |  0.2114  |  2.2871  |
-|       ART      |  0.2724  |    -     |
-|   Radial ART   |  0.1714  |  1.1001  |
+|       ART      |  0.2724  |  0.9233  |
+|   Radial ART   |  0.1714  |  0.9489  |
 |     ART+SCP    |  0.2010  |    -     |
 | Radial ART+SCP |  0.2102  |    -     |
-|Expected Results| ~0.2010  |  ~0.4000 |
 
 *Note: In the following figures ART and ART-SCP are the evaluated Radial ART and Radial ART-SCP models.
 
@@ -82,17 +80,17 @@ From initial evaluation, results show some promise, though are not quite ideal.
 
 **Positive Results:**
 - Memory is indeed reduced with sparse-radial attention masks cutting nearly 70% of attention-matrix memory (and associated large reduction in VRAM). 
-- In addition, Radial ART+SCP performs roughly 0.09% worse than ART+SCP, which is reasonable given the reduced memory.
+- In addition, Radial ART+SCP performs roughly 4.3% worse than ART+SCP, which is not terrible given the reduced memory.
 
 **Negative Results:**
 - While Radial ART alone appears to excel, this is the result of violating feasibility/koz and thus cannot be taken in actuality. 
-- This conclusion for Radial ART alone is further suggested as the Radial ART+SCP performs slightly worse than ART+SCP (does not take a phantom 0.1714 cost solution). This slight underperformance, is not too surprising, given the use of sparse radial attention. However, the model should be able to reach nearly identical performance. This underperformance could also be because of the use of fp16 weights instead of the standard ART's fp32. This switch to half values was required as flash-attn (required in radial-attention repo and used for fast inferencing) only supports fp16.
- - Most notably, inference is far slower than expected. The cause of the slow-down is not known, though likely lies in some fault within the proper integration of flash-attn.
+- This conclusion for Radial ART alone is further suggested as the Radial ART+SCP performs slightly worse than ART+SCP (does not take a phantom 0.1714 cost solution).
+- Most notably, Radial ART runtime is roughly even with that of ART. This is likely because the small sequnce length and small state space do not yield a large advantage when using sparse representation.
  
  ---
  
 ## 6  Conclusion
-As a result, it seems radial attention does not perform as well as expected within the ART-SCP pipeline. However, promising results are certainly shown and warrant further investigation, imporvement, and bug finding/fixing within this implementation.
+As a result, it seems radial attention does not excel within the ART-SCP pipeline. While reducing some memory, radial attention does not really provide much speed-up within the current use case. However, should longer time horizons be desired in the future, radial attention could prove a valuable tool.
 
 ---
 
